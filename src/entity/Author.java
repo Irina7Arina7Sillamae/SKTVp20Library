@@ -1,7 +1,10 @@
 
 package entity;
 
-
+/**
+ *
+ * @author user
+ */
 public class Author {
     private String firstname;
     private String lastname;
@@ -29,7 +32,6 @@ public class Author {
     public String toString() {
         return "Author{" + "firstname=" + firstname + ", lastname=" + lastname + '}';
     }
-      
+    
     
 }
-

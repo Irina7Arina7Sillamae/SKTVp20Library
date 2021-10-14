@@ -1,7 +1,12 @@
 
 package entity;
 
+import java.util.Arrays;
 
+/**
+ *
+ * @author user
+ */
 public class Book {
     private String bookName;
     private Author[] authors;
@@ -36,12 +41,8 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" + "bookName=" + bookName + ", authors=" + authors + ", publishedYear=" + publishedYear + '}';
+        return "Book{" + "bookName=" + bookName + ", authors=" + Arrays.toString(authors) + ", publishedYear=" + publishedYear + '}';
     }
-    
-    
-
-   
     
     
     
