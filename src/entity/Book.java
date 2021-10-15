@@ -41,10 +41,9 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" + "bookName=" + bookName + ", authors=" + Arrays.toString(authors) + ", publishedYear=" + publishedYear + '}';
+        return "Книги: {" + "название книги = " + bookName + ", автор = " + Arrays.toString(authors) + ", год издания = " + publishedYear + '}';
     }
     
     
+    }
     
-    
-}

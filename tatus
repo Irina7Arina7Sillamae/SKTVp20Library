@@ -1,0 +1,23 @@
+[33mcommit be35e488ee2803b0a4a9bc935f36dc62f97fba3e[m[33m ([m[1;36mHEAD -> [m[1;32mui[m[33m, [m[1;31morigin/ui[m[33m)[m
+Author: irina Siskova <Irina.Siskova@ivkhk.ee>
+Date:   Thu Oct 14 14:46:44 2021 +0300
+
+    Реализована функция возврата книги в библиотеку
+
+[33mcommit ab190f221a746bc4a1fdcf7c746a120e81699645[m
+Author: irina Siskova <Irina.Siskova@ivkhk.ee>
+Date:   Tue Oct 12 19:32:46 2021 +0300
+
+    second version
+
+[33mcommit 8e454349dac7c0247dab81207c289ba230659eb2[m
+Author: irina Siskova <Irina.Siskova@ivkhk.ee>
+Date:   Fri Oct 8 09:25:04 2021 +0300
+
+    Создали UI. Реализовали метод app.addBook()
+
+[33mcommit 8bc88099d2645c4349b478812104fc6ac206b3af[m[33m ([m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Author: irina Siskova <Irina.Siskova@ivkhk.ee>
+Date:   Thu Oct 7 17:40:17 2021 +0300
+
+    первая версия

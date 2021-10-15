@@ -39,7 +39,7 @@ public class Reader {
 
     @Override
     public String toString() {
-        return "Reader{" + "firstname=" + firstname + ", lastname=" + lastname + ", phone=" + phone + '}';
+        return "Читатели:{" + "имя = " + firstname + ", фамилия = " + lastname + ", phone = " + phone + '}';
     }
     
 }

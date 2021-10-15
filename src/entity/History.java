@@ -51,10 +51,10 @@ public class History {
     @Override
     public String toString() {
         return "History{" 
-                + "reader=" + reader 
-                + ", book=" + book 
-                + ", givenDate=" + givenDate 
-                + ", returnedDate=" + returnedDate 
+                + "читатель = " + reader 
+                + ", книга = " + book 
+                + ", выдана = " + givenDate 
+                + ", возвращена = " + returnedDate 
                 + '}';
     }
     
