@@ -5,6 +5,7 @@ import entity.Author;
 import entity.Book;
 import entity.History;
 import entity.Reader;
+import interfases.Keeping;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -12,19 +13,22 @@ import java.util.List;
 import java.util.Scanner;
 
 
-/**
- *
- * @author user
- */
+
 public class App {
     private Scanner scanner = new Scanner(System.in);
     private List<Book> books = new ArrayList<>();
     private List<Reader> readers = new ArrayList<>();
     private List<History> histories = new ArrayList<>();
+    private Keeping keeping = new KeeperToFile();
+    
+    public App(){
+        books = keeping.loadBooks();
+        readers = keeping.loadReaders();
+        histories = keeping.loadHistories();
+    }
     
     public void run(){
-      
-        
+            
         String repeat = "r";
         do{
             System.out.println("Выберите номер задачи:");
@@ -35,10 +39,10 @@ public class App {
             System.out.println("4: Список читателей");
             System.out.println("5: Выдать книгу читателю");
             System.out.println("6: Вернуть книгу");
+            
             int task = scanner.nextInt(); scanner.nextLine();
             switch (task) {
-                
-                
+                               
                 case 0:
                     repeat="q";
                     System.out.println("Пока!");
@@ -46,6 +50,7 @@ public class App {
                 case 1:
                     System.out.println("--- Добавление книги ---");
                             books.add(addBook());
+                            keeping.saveBooks(books);
                             break;
                 case 2:
                     System.out.println("--- Список книг ---");
@@ -60,6 +65,7 @@ public class App {
                 case 3:
                     System.out.println("--- Добавление читателя ---");
                          readers.add(addReader());
+                         keeping.saveReaders(readers);
                          break;                                          
                 case 4:
                     System.out.println("--- Список читателей ---");
@@ -74,6 +80,7 @@ public class App {
                     System.out.println("--- Выдача книги ---");
                     History history = addHistory();
                     histories.add(history);
+                    keeping.saveHistories(histories);
                     System.out.println("Книга "+history.getBook().getBookName()
                                         +" выдана читателю "+history.getReader().getFirstname()
                                         +" " +history.getReader().getLastname());
@@ -111,11 +118,11 @@ public class App {
                     break;
                 default:
                     System.out.println("Выберите цифру из списка!");;
-            }
-
-   
+            }  
         }while("r".equals(repeat));
     }
+    
+    
     private Book addBook(){
         Book book = new Book();
         System.out.print("Введите название книги: ");

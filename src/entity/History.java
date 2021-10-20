@@ -1,13 +1,14 @@
 
 package entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author user
  */
-public class History {
+public class History implements Serializable {
     private Reader reader;
     private Book book;
     private Date givenDate;
