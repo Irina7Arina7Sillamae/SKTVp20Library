@@ -8,7 +8,9 @@ public class Book implements Serializable{
     private String bookName;
     private Author[] authors;
     private int publishedYear;
-
+    private int quantity;
+    private int count;
+    
     public Book() {
     }
 
@@ -36,9 +38,31 @@ public class Book implements Serializable{
         this.publishedYear = publishedYear;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
     @Override
     public String toString() {
-        return "Книги: {" + "название книги = " + bookName + ", автор = " + Arrays.toString(authors) + ", год издания = " + publishedYear + '}';
+        return "Книга{" 
+                + "название книги=" + bookName 
+                + ", автор=" + Arrays.toString(authors) 
+                + ", год изания=" + publishedYear 
+                + ", quantity=" + quantity 
+                + ", count=" + count 
+                + '}';
     }
     
     

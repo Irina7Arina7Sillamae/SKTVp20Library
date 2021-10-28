@@ -80,8 +80,8 @@ public class KeeperToFile implements Keeping{
 
     @Override
     public List<Reader> loadReaders() {
-       FileInputStream fis = null;
-         ObjectInputStream ois = null;
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
         List<Reader> readers = new ArrayList<>();         
         try {
             fis = new FileInputStream("readers");
@@ -99,7 +99,7 @@ public class KeeperToFile implements Keeping{
 
     @Override
     public void saveHistories(List<History> histories) {
-      FileOutputStream fos = null;
+        FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
             fos = new FileOutputStream("histories");
@@ -116,8 +116,8 @@ public class KeeperToFile implements Keeping{
 
     @Override
     public List<History> loadHistories() {
-       FileInputStream fis = null;
-         ObjectInputStream ois = null;
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
         List<History> histories = new ArrayList<>();         
         try {
             fis = new FileInputStream("histories");

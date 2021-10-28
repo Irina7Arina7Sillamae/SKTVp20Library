@@ -29,8 +29,12 @@ public class Author implements Serializable{
 
     @Override
     public String toString() {
-        return   firstname + " " + lastname ;
-    } 
+        return "автор{" + "=" + firstname + ", фамилия=" + lastname + '}';
+    }
+
+    
+    }
+
     
     
 }
