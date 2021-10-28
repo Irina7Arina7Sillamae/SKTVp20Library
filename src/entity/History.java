@@ -1,10 +1,11 @@
 
 package entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 
-public class History {
+public class History implements Serializable{
     private Reader reader;
     private Book book;
     private Date givenDate;
@@ -47,8 +48,11 @@ public class History {
 
     @Override
     public String toString() {
-        return "History{" + "reader=" + reader + ", book=" + book + ", givenDate=" + givenDate + ", returnedDate=" + returnedDate + '}';
+        return "History / " 
+                + "читатель: " + reader 
+                + " / книга=" + book 
+                + " / дата выдачи=" + givenDate 
+                + " / дата возврата=" + returnedDate ;
     }
-
-
+    
 }

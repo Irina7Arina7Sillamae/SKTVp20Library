@@ -1,11 +1,15 @@
-
 package entity;
 
+import java.io.Serializable;
+import java.util.Arrays;
 
-public class Book {
+
+public class Book implements Serializable{
     private String bookName;
     private Author[] authors;
     private int publishedYear;
+    private int quantity;
+    private int count;
 
     public Book() {
     }
@@ -34,14 +38,31 @@ public class Book {
         this.publishedYear = publishedYear;
     }
 
-    @Override
-    public String toString() {
-        return "Book{" + "bookName=" + bookName + ", authors=" + authors + ", publishedYear=" + publishedYear + '}';
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
     
-    
+    @Override
+    public String toString() {
+        return  "Название книги: " + bookName 
+                + " / автор: " + Arrays.toString(authors) 
+                + " / год издания: " + publishedYear + "г"
+                + " / количество экземпляров: " + quantity + "шт " 
+                + " / в наличии: " + count + "шт " ;
+    }
 
-   
     
     
     
