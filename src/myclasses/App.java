@@ -12,7 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
 
-
+/*  Реализация логики отслеживающей количество экземпляров книг в библиотеке  */
 
 public class App {
     private Scanner scanner = new Scanner(System.in);
