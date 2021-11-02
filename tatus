@@ -1,4 +1,28 @@
-[33mcommit be35e488ee2803b0a4a9bc935f36dc62f97fba3e[m[33m ([m[1;36mHEAD -> [m[1;32mui[m[33m, [m[1;31morigin/ui[m[33m)[m
+[33mcommit 36dee00f153a3f4e35f9a639a65519451edd501f[m[33m ([m[1;36mHEAD -> [m[1;32mcountBook[m[33m, [m[1;31morigin/countBook[m[33m, [m[1;32msaveToFile[m[33m)[m
+Author: irina Siskova <Irina.Siskova@ivkhk.ee>
+Date:   Fri Oct 29 03:01:49 2021 +0300
+
+     Oтслеживание количества экземпляров книг
+
+[33mcommit 7e90ba92d00db966a4695ebf54c3f55905055317[m
+Author: irina Siskova <Irina.Siskova@ivkhk.ee>
+Date:   Thu Oct 28 16:07:03 2021 +0300
+
+    business logic
+
+[33mcommit 0d79296a54c5a04a31b8be317e0c037d72c7020f[m[33m ([m[1;31morigin/saveToFile[m[33m, [m[1;32mtoCollection[m[33m)[m
+Author: irina Siskova <Irina.Siskova@ivkhk.ee>
+Date:   Wed Oct 20 11:01:20 2021 +0300
+
+    Реализовали сохранение книг в файле
+
+[33mcommit 1035917e9cd1be21ed7ad661f9b06dddf7615b30[m[33m ([m[1;31morigin/toCollection[m[33m)[m
+Author: irina Siskova <Irina.Siskova@ivkhk.ee>
+Date:   Fri Oct 15 12:30:58 2021 +0300
+
+    Замена массивов коллекциями
+
+[33mcommit be35e488ee2803b0a4a9bc935f36dc62f97fba3e[m[33m ([m[1;31morigin/ui[m[33m, [m[1;32mui[m[33m)[m
 Author: irina Siskova <Irina.Siskova@ivkhk.ee>
 Date:   Thu Oct 14 14:46:44 2021 +0300
 

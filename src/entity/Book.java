@@ -56,13 +56,12 @@ public class Book implements Serializable{
 
     @Override
     public String toString() {
-        return "Книга{" 
-                + "название книги=" + bookName 
-                + ", автор=" + Arrays.toString(authors) 
-                + ", год изания=" + publishedYear 
-                + ", quantity=" + quantity 
-                + ", count=" + count 
-                + '}';
+        return "*** Книга *** " 
+                + " название книги: " + bookName 
+                + ", автор: " + Arrays.toString(authors) 
+                + ", год изания: " + publishedYear 
+                + ", quantity: " + quantity 
+                + ", count: " + count ;
     }
     
     
