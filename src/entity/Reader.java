@@ -38,7 +38,7 @@ public class Reader implements Serializable {
 
     @Override
     public String toString() {
-        return "*** Читатели ***" + "  имя/фамилия: " + firstname  + " " + lastname + "  phone: " + phone ;
+        return "* Читатель *" + "  имя/фамилия: " + firstname  + " " + lastname + "  phone: " + phone ;
     }
     
 }

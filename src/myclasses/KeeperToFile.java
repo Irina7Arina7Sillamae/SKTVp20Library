@@ -1,11 +1,4 @@
 
-
-
-
-
-
-
-
 package myclasses;
 
 import entity.Book;
@@ -45,7 +38,7 @@ public class KeeperToFile implements Keeping{
     @Override
     public List<Book> loadBooks() {
         FileInputStream fis = null;
-         ObjectInputStream ois = null;
+        ObjectInputStream ois = null;
         List<Book> books = new ArrayList<>();         
         try {
             fis = new FileInputStream("books");

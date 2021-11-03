@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 
 public class Book implements Serializable{
+    
     private String bookName;
     private Author[] authors;
     private int publishedYear;
@@ -56,7 +57,7 @@ public class Book implements Serializable{
 
     @Override
     public String toString() {
-        return "*** Книга *** " 
+        return "* Книга * " 
                 + " название книги: " + bookName 
                 + ", автор: " + Arrays.toString(authors) 
                 + ", год изания: " + publishedYear 
