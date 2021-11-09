@@ -12,7 +12,7 @@ public class SKTVp20Library {
       app = new App();
       app.run();
       
-        System.out.println("");
+      System.out.println("");
     }
     
 }

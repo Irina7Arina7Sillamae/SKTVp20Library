@@ -56,15 +56,14 @@ public class App {
                     printListBooks();
                     break;
                 case 3:
-                   addReader();
-                         break;                                          
+                    addReader();
+                    break;                                          
                 case 4:
                     printListReaders();
                     break;
                 case 5:
                     addHistory();
-                    break;
-                    
+                    break;      
                 case 6:
                     returnBook();
                     break;
@@ -122,7 +121,7 @@ public class App {
         keeping.saveReaders(readers);
     }
 
-    private History addHistory() {
+    private void addHistory() {
         System.out.println("-------------------");
         System.out.println("*** Выдача книги ***");                   
         System.out.println("*** Список книг: *** ");
@@ -151,7 +150,7 @@ public class App {
         }
         if(n<1) {
             System.out.println("*** Нет книг для чтения! ***");
-            return null;
+            return;
         }
         
         System.out.print("*** Выберите номер книги: ***   ");
@@ -178,7 +177,6 @@ public class App {
                             +" " +history.getReader().getLastname()
         );
         System.out.println("-------------------");
-        return null;
         
 
     }
@@ -244,7 +242,7 @@ public class App {
                 +histories.get(numberHistory - 1).getBook().getBookName()
                 +" возвращена в библиотеку");
             System.out.println("-------------------");
-   } 
+        } 
             private void printListGivenBooks() {
                 System.out.println("-------------------");
                 System.out.println("*** Список читаемых книг: ***");
@@ -268,11 +266,5 @@ public class App {
                     }
             }
 
-    
-        
-
-        
-        
-        
-}
+    }
 
