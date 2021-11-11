@@ -51,7 +51,7 @@ public class App {
             System.out.println("5: Выдать книгу читателю");
             System.out.println("6: Вернуть книгу");
             System.out.println("7: Список выданных книг");
-            System.out.println("7: Список выданных книг");
+            
             int task = scanner.nextInt(); scanner.nextLine();
             switch (task) {
                 case 0:
