@@ -1,5 +1,5 @@
 
-package interfases;
+package interfaces;
 
 import entity.Book;
 import entity.History;
