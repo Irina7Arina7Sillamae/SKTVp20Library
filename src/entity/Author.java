@@ -1,9 +1,17 @@
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package entity;
 
 import java.io.Serializable;
 
-
+/**
+ *
+ * @author user
+ */
 public class Author implements Serializable{
     private String firstname;
     private String lastname;
@@ -29,11 +37,8 @@ public class Author implements Serializable{
 
     @Override
     public String toString() {
-        return  firstname + " " + lastname ;
+        return "Author{" + "firstname=" + firstname + ", lastname=" + lastname + '}';
     }
-
-    
-    }
-
     
     
+}

@@ -6,7 +6,10 @@ import entity.History;
 import entity.Reader;
 import java.util.List;
 
-
+/**
+ *
+ * @author user
+ */
 public interface Keeping {
     public void saveBooks(List<Book> books);
     public List<Book> loadBooks();

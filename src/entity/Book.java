@@ -1,17 +1,20 @@
 
 package entity;
+
 import java.io.Serializable;
 import java.util.Arrays;
 
-
+/**
+ *
+ * @author user
+ */
 public class Book implements Serializable{
-    
     private String bookName;
     private Author[] authors;
     private int publishedYear;
     private int quantity;
     private int count;
-    
+
     public Book() {
     }
 
@@ -39,6 +42,17 @@ public class Book implements Serializable{
         this.publishedYear = publishedYear;
     }
 
+    @Override
+    public String toString() {
+        return "Book{" 
+                + "bookName=" + bookName 
+                + ", authors=" + Arrays.toString(authors) 
+                + ", publishedYear=" + publishedYear 
+                + ", quantity=" + quantity 
+                + ", count=" + count 
+                + '}';
+    }
+
     public int getQuantity() {
         return quantity;
     }
@@ -54,17 +68,8 @@ public class Book implements Serializable{
     public void setCount(int count) {
         this.count = count;
     }
-
-    @Override
-    public String toString() {
-        return "* Книга * " 
-                + " название книги: " + bookName 
-                + ", автор: " + Arrays.toString(authors) 
-                + ", год изания: " + publishedYear 
-                + ", quantity: " + quantity 
-                + ", count: " + count ;
-    }
     
     
-    }
     
+    
+}

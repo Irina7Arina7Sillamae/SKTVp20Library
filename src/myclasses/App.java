@@ -20,10 +20,6 @@ import java.util.Scanner;
 import java.util.Set;
 
 
-/**
- *
- * @author user
- */
 public class App {
     private Scanner scanner = new Scanner(System.in);
     //---------- Данные библиотеки ----------
@@ -51,7 +47,6 @@ public class App {
             System.out.println("5: Выдать книгу читателю");
             System.out.println("6: Вернуть книгу");
             System.out.println("7: Список выданных книг");
-            
             int task = scanner.nextInt(); scanner.nextLine();
             switch (task) {
                 case 0:
