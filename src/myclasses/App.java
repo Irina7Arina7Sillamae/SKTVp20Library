@@ -26,11 +26,14 @@ public class App {
     private List<Book> books = new ArrayList<>();
     private List<Reader> readers = new ArrayList<>();
     private List<History> histories = new ArrayList<>();
+    private List<Author> authors = new ArrayList<>();
     // -------- сохранение --------
-    private Keeping keeping = new KeeperToFile();
+//    private Keeping keeping = new KeeperToFile();
+    private Keeping keeping = new KeeperToBase();
     
     public App(){
         books = keeping.loadBooks();
+        authors = keeping.loadAuthors();
         readers = keeping.loadReaders();
         histories = keeping.loadHistories();
     }
@@ -38,7 +41,8 @@ public class App {
     public void run(){
        String repeat = "r";
         do{
-            System.out.println("Выберите номер задачи:");
+            System.out.println("---------------------");
+            System.out.println("--- Выберите номер задачи: ---");
             System.out.println("0: Закончить программу");
             System.out.println("1: Добавить книгу");
             System.out.println("2: Список книг");
@@ -47,6 +51,8 @@ public class App {
             System.out.println("5: Выдать книгу читателю");
             System.out.println("6: Вернуть книгу");
             System.out.println("7: Список выданных книг");
+            System.out.println("8: Добавить автора");
+            System.out.println("9: Список авторов");
             int task = scanner.nextInt(); scanner.nextLine();
             switch (task) {
                 case 0:
@@ -74,8 +80,14 @@ public class App {
                 case 7:
                     printListGivenBooks();
                     break;
+                case 8:
+                    addAuthor();
+                    break;
+                case 9:
+                    printListAuthors();
+                    break;
                 default:
-                    System.out.println("Выберите цифру из списка!");;
+                    System.out.println("--- Выберите цифру из списка! ---");;
             }
         }while("r".equals(repeat));
     }
@@ -102,7 +114,6 @@ public class App {
             authors[i] = author;
         }
         book.setAuthors(authors);
-        System.out.println("---------------------");
         books.add(book);
         keeping.saveBooks(books);
     }
@@ -123,7 +134,7 @@ public class App {
     private void addHistory() {
         System.out.println("--- Выдача книги ---");
         History history = new History();
-        System.out.println("Выберите номер книги: ");
+        System.out.println("--- Выберите номер книги: ---");
         Set<Integer> setNumbersBooks = printListBooks();
         if(setNumbersBooks.isEmpty()){
             return;
@@ -133,7 +144,7 @@ public class App {
         if(setNumbersReaders.isEmpty()){
             return;
         }
-        System.out.println("Выберите номер читателя: ");
+        System.out.println("--- Выберите номер читателя: ---");
         int numberReader = insertNumber(setNumbersReaders);        
         history.setBook(books.get(numberBook-1));
         history.setReader(readers.get(numberReader-1));
@@ -143,11 +154,11 @@ public class App {
         keeping.saveBooks(books);
         histories.add(history);
         keeping.saveHistories(histories);
+        System.out.println("-------------------");
         System.out.println("Книга "+history.getBook().getBookName()
                             +" выдана читателю "+history.getReader().getFirstname()
                             +" " +history.getReader().getLastname()
-        );
-        System.out.println("-------------------");
+        );      
         
     }
 
@@ -174,7 +185,6 @@ public class App {
                 );
             }
         }
-        System.out.println("-------------------");
         return setNumbersBooks;
     }
     private String getReturnDate(Book book){
@@ -203,17 +213,17 @@ public class App {
                setNumbersReaders.add(i+1);
             }
         }
-        System.out.println("-------------------");
         return setNumbersReaders;
     }
 
     private void returnBook() {
-        System.out.println("--- Возврат книги ---");
+        System.out.println("------ Возврат книги ------");
         Set<Integer> setNumbersGivenBooks = printListGivenBooks();
         if(setNumbersGivenBooks.isEmpty()){
             return;
         }
-        System.out.print("Выберите номер возврщаемой книги: ");
+        System.out.println("-------------------");
+        System.out.print("--- Выберите номер возврaщаемой книги: ---");
         int numberHistory = insertNumber(setNumbersGivenBooks);
         Calendar c = new GregorianCalendar();
         histories.get(numberHistory - 1).setReturnedDate(c.getTime());
@@ -237,11 +247,10 @@ public class App {
                 +histories.get(numberHistory - 1).getBook().getBookName()
                 +" возвращена в библиотеку"
         );
-        System.out.println("-------------------");
     }
 
     private Set<Integer> printListGivenBooks() {
-        System.out.println("Список читаемых книг:");
+        System.out.println("---Список читаемых книг: ---");
         Set<Integer> setNumbersBook = new HashSet<>();
         for (int i = 0; i < histories.size(); i++) {
             if(histories.get(i) != null && histories.get(i).getReturnedDate() == null){
@@ -254,7 +263,7 @@ public class App {
             }
         }
         if(setNumbersBook.isEmpty()){
-            System.out.println("Нет читаемых книг!");
+            System.out.println("--- Нет читаемых книг! ---");
             System.out.println("-------------------");
         }
         return setNumbersBook;
@@ -280,8 +289,16 @@ public class App {
             if(setNumbers.contains(number)){
                 return number;
             }
-            System.out.println("Попробуй еще: ");
+            System.out.println("Попробуй еще раз: ");
         }while(true);
+    }
+
+    private void addAuthor() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void printListAuthors() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
    
 }
