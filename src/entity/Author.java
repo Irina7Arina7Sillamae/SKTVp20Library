@@ -17,6 +17,7 @@ public class Author implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     private String firstname;
     private String lastname;
 
@@ -41,7 +42,7 @@ public class Author implements Serializable{
 
     @Override
     public String toString() {
-        return "Author{" + "firstname=" + firstname + ", lastname=" + lastname + '}';
+        return  firstname + " " + lastname ;
     }
 
     public Long getId() {

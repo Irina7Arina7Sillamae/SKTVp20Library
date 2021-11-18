@@ -30,17 +30,6 @@ public class KeeperToBase implements Keeping{
         tx.commit();
         
     }
-@Override
-    public void saveAuthors(List<Author> authors) {
-        tx.begin();
-            for (int i = 0; i < authors.size(); i++) {
-                if(authors.get(i).getId() == null){
-                    em.persist(authors.get(i));
-                }
-            }
-        tx.commit();
-        
-    }
 
     @Override
     public List<Book> loadBooks() {
@@ -51,6 +40,18 @@ public class KeeperToBase implements Keeping{
             System.out.println("Таблица BOOK пуста");
         }
         return new ArrayList<>();
+    }
+    
+    @Override
+    public void saveAuthors(List<Author> authors) {
+        tx.begin();
+            for (int i = 0; i < authors.size(); i++) {
+                if(authors.get(i).getId() == null){
+                    em.persist(authors.get(i));
+                }
+            }
+        tx.commit();
+        
     }
     
     public List<Author> loadAuthors() {

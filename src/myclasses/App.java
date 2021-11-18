@@ -20,6 +20,10 @@ import java.util.Scanner;
 import java.util.Set;
 
 
+/**
+ *
+ * @author user
+ */
 public class App {
     private Scanner scanner = new Scanner(System.in);
     //---------- Данные библиотеки ----------
@@ -41,8 +45,7 @@ public class App {
     public void run(){
        String repeat = "r";
         do{
-            System.out.println("---------------------");
-            System.out.println("--- Выберите номер задачи: ---");
+            System.out.println("Выберите номер задачи:");
             System.out.println("0: Закончить программу");
             System.out.println("1: Добавить книгу");
             System.out.println("2: Список книг");
@@ -87,13 +90,33 @@ public class App {
                     printListAuthors();
                     break;
                 default:
-                    System.out.println("--- Выберите цифру из списка! ---");;
+                    System.out.println("Выберите цифру из списка!");;
             }
         }while("r".equals(repeat));
     }
     private void addBook(){
         System.out.println("--- Добавление книги ---");
+       
+        
         Book book = new Book();
+        Set<Integer> setNumbersAuthors = printListAuthors();
+        if(setNumbersAuthors.isEmpty()){
+            return;
+        }
+        System.out.println("Если есть авторы книги в списке выберите 1, если нет, выберите другую цифру!");
+        if(getNumber() != 1){
+            System.out.println("Добавьте автора!");
+            return;
+        }
+        System.out.print("Сколько авторов у книги: ");
+        int countAuthors = getNumber();
+        List<Author> authorsBook = new ArrayList<>();
+        for (int i = 0; i < countAuthors; i++) {
+            System.out.println("Введите номер автора "+(i+1));
+            int numberAuthor = insertNumber(setNumbersAuthors);
+            authorsBook.add(authors.get(numberAuthor - 1));
+        }
+        book.setAuthors(authorsBook);
         System.out.print("Введите название книги: ");
         book.setBookName(scanner.nextLine());
         System.out.print("Введите год издания книги: ");
@@ -101,19 +124,7 @@ public class App {
         System.out.print("Введите количество экземпляров книги: ");
         book.setQuantity(getNumber());
         book.setCount(book.getQuantity());
-        System.out.println("Введите автора книги ");
-        System.out.print("Сколько авторов у книги: ");
-        int countAuthors = getNumber();
-        Author[] authors = new Author[countAuthors];
-        for (int i = 0; i < authors.length; i++) {
-            Author author = new Author();
-            System.out.println("Имя автора "+(i+1)+": ");
-            author.setFirstname(scanner.nextLine());
-            System.out.println("Фамилия автора: ");
-            author.setLastname(scanner.nextLine());
-            authors[i] = author;
-        }
-        book.setAuthors(authors);
+        System.out.println("---------------------");
         books.add(book);
         keeping.saveBooks(books);
     }
@@ -134,7 +145,7 @@ public class App {
     private void addHistory() {
         System.out.println("--- Выдача книги ---");
         History history = new History();
-        System.out.println("--- Выберите номер книги: ---");
+        System.out.println("Выберите номер книги: ");
         Set<Integer> setNumbersBooks = printListBooks();
         if(setNumbersBooks.isEmpty()){
             return;
@@ -144,7 +155,7 @@ public class App {
         if(setNumbersReaders.isEmpty()){
             return;
         }
-        System.out.println("--- Выберите номер читателя: ---");
+        System.out.println("Выберите номер читателя: ");
         int numberReader = insertNumber(setNumbersReaders);        
         history.setBook(books.get(numberBook-1));
         history.setReader(readers.get(numberReader-1));
@@ -154,11 +165,11 @@ public class App {
         keeping.saveBooks(books);
         histories.add(history);
         keeping.saveHistories(histories);
-        System.out.println("-------------------");
         System.out.println("Книга "+history.getBook().getBookName()
                             +" выдана читателю "+history.getReader().getFirstname()
                             +" " +history.getReader().getLastname()
-        );      
+        );
+        System.out.println("-------------------");
         
     }
 
@@ -167,24 +178,25 @@ public class App {
         Set<Integer> setNumbersBooks = new HashSet<>();
         for (int i = 0; i < books.size(); i++) {
             if(books.get(i) != null && books.get(i).getCount() > 0){
-                System.out.printf("%d. %s. %s. %d. В наличии екземпляров: %d%n"
+                System.out.printf("%d. %s. %s. %d. В наличии экземпляров: %d%n"
                         ,i+1
                         ,books.get(i).getBookName()
-                        ,Arrays.toString(books.get(i).getAuthors())
+                        ,Arrays.toString(books.get(i).getAuthors().toArray())
                         ,books.get(i).getPublishedYear()
                         ,books.get(i).getCount()
                 );
                 setNumbersBooks.add(i+1);
             }else if(books.get(i) != null){
-                System.out.printf("%d. %s. %s. %d. Книга читается до: %s%n"
+                System.out.printf("%1$d. (Книга читается до: %5$s) %2$s. %4$d. %3$s%n"
                         ,i+1
                         ,books.get(i).getBookName()
-                        ,Arrays.toString(books.get(i).getAuthors())
+                        ,Arrays.toString(books.get(i).getAuthors().toArray())
                         ,books.get(i).getPublishedYear()
                         ,getReturnDate(books.get(i))
                 );
             }
         }
+        System.out.println("-------------------");
         return setNumbersBooks;
     }
     private String getReturnDate(Book book){
@@ -213,17 +225,17 @@ public class App {
                setNumbersReaders.add(i+1);
             }
         }
+        System.out.println("-------------------");
         return setNumbersReaders;
     }
 
     private void returnBook() {
-        System.out.println("------ Возврат книги ------");
+        System.out.println("--- Возврат книги ---");
         Set<Integer> setNumbersGivenBooks = printListGivenBooks();
         if(setNumbersGivenBooks.isEmpty()){
             return;
         }
-        System.out.println("-------------------");
-        System.out.print("--- Выберите номер возврaщаемой книги: ---");
+        System.out.print("Выберите номер возврщаемой книги: ");
         int numberHistory = insertNumber(setNumbersGivenBooks);
         Calendar c = new GregorianCalendar();
         histories.get(numberHistory - 1).setReturnedDate(c.getTime());
@@ -247,10 +259,11 @@ public class App {
                 +histories.get(numberHistory - 1).getBook().getBookName()
                 +" возвращена в библиотеку"
         );
+        System.out.println("-------------------");
     }
 
     private Set<Integer> printListGivenBooks() {
-        System.out.println("---Список читаемых книг: ---");
+        System.out.println("Список читаемых книг:");
         Set<Integer> setNumbersBook = new HashSet<>();
         for (int i = 0; i < histories.size(); i++) {
             if(histories.get(i) != null && histories.get(i).getReturnedDate() == null){
@@ -263,7 +276,7 @@ public class App {
             }
         }
         if(setNumbersBook.isEmpty()){
-            System.out.println("--- Нет читаемых книг! ---");
+            System.out.println("Нет читаемых книг!");
             System.out.println("-------------------");
         }
         return setNumbersBook;
@@ -289,16 +302,38 @@ public class App {
             if(setNumbers.contains(number)){
                 return number;
             }
-            System.out.println("Попробуй еще раз: ");
+            System.out.println("Попробуй еще: ");
         }while(true);
     }
 
-    private void addAuthor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private Set<Integer> printListAuthors() {
+        Set<Integer> numbersAuthors = new HashSet<>();
+        if(authors.isEmpty()){
+            System.out.println("Список авторов пуст, добавьте авторов книги.");
+            return new HashSet<>();
+        }else{
+            System.out.println("Список авторов:");
+        }
+        for (int i = 0; i < authors.size(); i++) {
+            System.out.printf("%d. %s %s%n"
+                    ,i+1
+                    ,authors.get(i).getFirstname()
+                    ,authors.get(i).getLastname()
+            ); 
+            numbersAuthors.add(i+1);
+        }
+        return numbersAuthors;
     }
 
-    private void printListAuthors() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void addAuthor() {
+        System.out.println("---- Добавить автора -----");
+        Author author = new Author();
+        System.out.println("Имя автора: ");
+        author.setFirstname(scanner.nextLine());
+        System.out.println("Фамилия автора: ");
+        author.setLastname(scanner.nextLine());
+        authors.add(author);
+        keeping.saveAuthors(authors);
     }
    
 }

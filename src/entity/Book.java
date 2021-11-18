@@ -3,10 +3,13 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Book implements Serializable{
@@ -14,7 +17,8 @@ public class Book implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String bookName;
-    private Author[] authors;
+    @OneToOne(cascade = CascadeType.ALL)
+    private List<Author> authors;
     private int publishedYear;
     private int quantity;
     private int count;
@@ -30,32 +34,36 @@ public class Book implements Serializable{
         this.bookName = bookName;
     }
 
-    public Author[] getAuthors() {
+    public List<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(Author[] authors) {
+    public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
 
     public int getPublishedYear() {
         return publishedYear;
     }
-
+    
     public void setPublishedYear(int publishedYear) {
         this.publishedYear = publishedYear;
     }
 
     @Override
     public String toString() {
-        return "Book{" 
-                + "bookName=" + bookName 
-                + ", authors=" + Arrays.toString(authors) 
+        return "Book{" + "bookName=" + bookName 
+                + ", authors=" + authors 
                 + ", publishedYear=" + publishedYear 
                 + ", quantity=" + quantity 
-                + ", count=" + count 
-                + '}';
+                + ", count=" + count + '}';
     }
+
+    
+
+    
+
+    
 
     public int getQuantity() {
         return quantity;
@@ -80,8 +88,12 @@ public class Book implements Serializable{
     public void setId(Long id) {
         this.id = id;
     }
+
+   
+    }
+
     
     
     
     
-}
+    

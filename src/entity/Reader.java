@@ -45,7 +45,9 @@ public class Reader implements Serializable{
 
     @Override
     public String toString() {
-        return "Reader{" + "firstname=" + firstname + ", lastname=" + lastname + ", phone=" + phone + '}';
+        return "Reader{" + "firstname=" + firstname 
+                + ", lastname=" + lastname 
+                + ", phone=" + phone + '}';
     }
 
     public Long getId() {
