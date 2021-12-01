@@ -7,10 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+
 @Entity
 public class Reader implements Serializable{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)    
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstname;
     private String lastname;
@@ -45,9 +45,9 @@ public class Reader implements Serializable{
 
     @Override
     public String toString() {
-        return "Reader{" + "firstname=" + firstname 
-                + ", lastname=" + lastname 
-                + ", phone=" + phone + '}';
+        return "*** " + firstname 
+                + " " + lastname 
+                + " *  phone: " + phone;
     }
 
     public Long getId() {
@@ -57,6 +57,5 @@ public class Reader implements Serializable{
     public void setId(Long id) {
         this.id = id;
     }
-    
     
 }
