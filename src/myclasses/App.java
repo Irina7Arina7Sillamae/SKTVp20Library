@@ -29,7 +29,7 @@ public class App {
     private List<History> histories = new ArrayList<>();
     private List<Author> authors = new ArrayList<>();
     // -------- сохранение --------
-//    private Keeping keeping = new KeeperToFile();
+    //private Keeping keeping = new KeeperToFile();
     private Keeping keeping = new KeeperToBase();
     
     public App(){
@@ -42,7 +42,7 @@ public class App {
     public void run(){
        String repeat = "r";
         do{
-            System.out.println("--------------------");
+            System.out.println("----------------------");
             System.out.println("*** Выберите номер задачи:   ");
             System.out.println(" 0: Закончить программу");
             System.out.println(" 1: Добавить книгу");
@@ -54,6 +54,8 @@ public class App {
             System.out.println(" 7: Список выданных книг");
             System.out.println(" 8: Добавить автора");
             System.out.println(" 9: Список авторов");
+            System.out.println("10: Изменить данные книги");
+            System.out.println("----------------------");
             int task = scanner.nextInt(); scanner.nextLine();
             switch (task) {
                 case 0:
@@ -87,6 +89,10 @@ public class App {
                 case 9:
                     printListAuthors();
                     break;
+                    case 10:
+                    changeBook();
+                    break;
+                    
                 default:
                     System.out.println("*** Выберите цифру из списка!   ");;
             }
@@ -95,14 +101,19 @@ public class App {
     private void addBook(){
         System.out.println("--------------------");
         System.out.println("*** Добавление книги ***");
+        if(isQuit()){
+            return;
+        }
         Book book = new Book();
         Set<Integer> setNumbersAuthors = printListAuthors();
         if(setNumbersAuthors.isEmpty()){
             return;
         }
-        System.out.println("*** Если есть авторы книги в списке выберите 1   ");
+        System.out.println("--------------------");
+        System.out.println("*** Если есть авторы книги в списке выберите 1, если нет, выберите 2   ");
         if(getNumber() != 1){
-            System.out.println("*** Добавьте автора!   ");
+            System.out.println("*** Добавьте автора!  ");
+            return;
         }
         System.out.print("*** Сколько авторов у книги:   ");
         int countAuthors = getNumber();
@@ -124,6 +135,9 @@ public class App {
         keeping.saveBooks(books);
     }
     private void addReader(){
+        if(isQuit()){
+            return;
+        }
         System.out.println("--------------------");
         System.out.println("*** Добавление читателя ***");
         Reader reader = new Reader();
@@ -138,8 +152,11 @@ public class App {
     }
 
     private void addHistory() {
+        if (isQuit()) {
+            return;
+        }
         System.out.println("--------------------");
-        System.out.println("*** Выдача книги ***");
+        System.out.println("--- Выдача книги ---");
         History history = new History();
         System.out.println("*** Выберите номер книги:   ");
         Set<Integer> setNumbersBooks = printListBooks();
@@ -147,11 +164,12 @@ public class App {
             return;
         }
         int numberBook = insertNumber(setNumbersBooks);
+        
+        System.out.println("--------------------");
         Set<Integer> setNumbersReaders = printListReaders();
         if(setNumbersReaders.isEmpty()){
             return;
         }
-        System.out.println("--------------------");
         System.out.println("*** Выберите номер читателя:   ");
         int numberReader = insertNumber(setNumbersReaders);        
         history.setBook(books.get(numberBook-1));
@@ -176,7 +194,7 @@ public class App {
         Set<Integer> setNumbersBooks = new HashSet<>();
         for (int i = 0; i < books.size(); i++) {
             if(books.get(i) != null && books.get(i).getCount() > 0){
-                System.out.printf("%d. %s. %s. %d. В наличии екземпляров: %d%n"
+                System.out.printf("%1d. %-20s %20s   %-7d В наличии екземпляров:%3dtk%n"
                         ,i+1
                         ,books.get(i).getBookName()
                         ,Arrays.toString(books.get(i).getAuthors().toArray())
@@ -184,7 +202,7 @@ public class App {
                         ,books.get(i).getCount()
                 );
                 setNumbersBooks.add(i+1);
-            }else if(books.get(i) != null){
+             }else if(books.get(i) != null && books.get(i).getQuantity()>0){
                 System.out.printf("%1$d. (Книга читается до: %5$s) %2$s. %4$d. %3$s%n"
                         ,i+1
                         ,books.get(i).getBookName()
@@ -194,6 +212,34 @@ public class App {
                 );
             }
         }
+        return setNumbersBooks;
+    }
+    
+    private Set<Integer> printListAllBooks() {
+        System.out.println("--- Список книг ---");
+        Set<Integer> setNumbersBooks = new HashSet<>();
+        for (int i = 0; i < books.size(); i++) {
+            if(books.get(i) != null && books.get(i).getCount() >= 0
+                    ){
+                System.out.printf("%4d. %11s %11s %d. В наличии екземпляров: %4d%n"
+                        ,i+1
+                        ,books.get(i).getBookName()
+                        ,Arrays.toString(books.get(i).getAuthors().toArray())
+                        ,books.get(i).getPublishedYear()
+                        ,books.get(i).getCount()
+                );
+                setNumbersBooks.add(i+1);
+            }else if(books.get(i) != null){
+                System.out.printf("%4$d. (Книга читается до: %10$s) %10$s. %7$d. %$s%n"
+                        ,i+1
+                        ,books.get(i).getBookName()
+                        ,Arrays.toString(books.get(i).getAuthors().toArray())
+                        ,books.get(i).getPublishedYear()
+                        ,getReturnDate(books.get(i))
+                );
+            }
+        }
+        System.out.println("-------------------");
         return setNumbersBooks;
     }
     private String getReturnDate(Book book){
@@ -215,7 +261,7 @@ public class App {
         Set<Integer> setNumbersReaders = new HashSet<>();
         for (int i = 0; i < readers.size(); i++) {
             if(readers.get(i) != null){
-                System.out.printf("%d. %s %s. Телефон: %s%n"
+                System.out.printf("%1d. %11s %-11s Телефон: %10s%n"
                         ,i+1
                         ,readers.get(i).getFirstname()
                         ,readers.get(i).getLastname()
@@ -230,6 +276,10 @@ public class App {
     private void returnBook() {
         System.out.println("--------------------");
         System.out.println("*** Возврат книги ***");
+        System.out.println("--- Возврат книги ---");
+        if(isQuit()){
+            return;
+        }
         Set<Integer> setNumbersGivenBooks = printListGivenBooks();
         if(setNumbersGivenBooks.isEmpty()){
             return;
@@ -267,10 +317,11 @@ public class App {
         Set<Integer> setNumbersBook = new HashSet<>();
         for (int i = 0; i < histories.size(); i++) {
             if(histories.get(i) != null && histories.get(i).getReturnedDate() == null){
-                System.out.println(i+1+". Книгу "
-                        +histories.get(i).getBook().getBookName()
-                        +" читает "+histories.get(i).getReader().getFirstname()
-                        +" "+histories.get(i).getReader().getLastname()
+                System.out.printf("%1d. Книгу:  %-20s  читает:  %-4s  %-11s%n"    
+                        ,i+1
+                        ,histories.get(i).getBook().getBookName()
+                        ,histories.get(i).getReader().getFirstname()
+                        ,histories.get(i).getReader().getLastname()
                 );
                 setNumbersBook.add(i+1);
             }
@@ -282,7 +333,7 @@ public class App {
         return setNumbersBook;
     }
 
-    private int getNumber() {
+    private int getNumber() {//проверка на ввод числа
         int number = 0;
         do{
             String strNumber = scanner.nextLine();
@@ -295,7 +346,7 @@ public class App {
         }while(true);
     }
 
-    private int insertNumber(Set<Integer> setNumbers) {
+    private int insertNumber(Set<Integer> setNumbers) { //проверка есть ли этот номер в списке
         int number;
         do{
             number = getNumber();
@@ -328,6 +379,9 @@ public class App {
     private void addAuthor() {
         System.out.println("--------------------");
         System.out.println("*** Добавить автора ***");
+        if(isQuit()){
+            return;
+        }
         Author author = new Author();
         System.out.println("*** Имя автора:   ");
         author.setFirstname(scanner.nextLine());
@@ -335,6 +389,101 @@ public class App {
         author.setLastname(scanner.nextLine());
         authors.add(author);
         keeping.saveAuthors(authors);
+    }
+
+    private void changeBook() {
+        System.out.println("----- Изменение данных книги ------");
+        if(isQuit()){
+            return;
+        }
+        /**
+         * 1. Выводим список книг
+         * 2. Выбрать номер книги
+         * 3. Показать содержимое поля книги
+         * 4. Спросить у пользователя, нужно ли менять поле.
+         * 5. Ввести новое значение поля.
+         * ----- повторить  3-5 для других полей книги
+         * сохранить список существующих книг 
+         */
+        Set<Integer> changeNumbers = new HashSet<>();
+        changeNumbers.add(1);
+        changeNumbers.add(2);
+        Set<Integer> setNumbersBooks = printListAllBooks();
+        if(setNumbersBooks.isEmpty()){
+            return;
+        }
+        
+        System.out.println("Введите номер книги: ");
+        int numberBook = insertNumber(setNumbersBooks);
+        System.out.println("Название книги: " + books.get(numberBook - 1).getBookName());
+        System.out.println("Если нужно изменить, нажми 1, если пропустить, нажми 2");
+        int change = insertNumber(changeNumbers);
+        if(1 == change){
+            System.out.println("Введите новое название книги: ");
+            books.get(numberBook - 1).setBookName(scanner.nextLine());
+        }
+        System.out.println("Год издания книги: " + books.get(numberBook - 1).getPublishedYear());
+        System.out.println("Если нужно изменить, нажми 1, если пропустить, нажми 2");
+        change = insertNumber(changeNumbers);
+        if(1 == change){
+            System.out.println("Введите новый год издания книги: ");
+            books.get(numberBook - 1).setPublishedYear(getNumber());
+        }
+        System.out.println("Количество экземпляров книги: " + books.get(numberBook - 1).getQuantity());
+        System.out.println("Если нужно изменить, нажми 1, если пропустить, нажми 2");
+        change = insertNumber(changeNumbers);
+        if(1 == change){
+            System.out.println("Введите новое количество экземпляров книги: ");
+            int oldQuantity = books.get(numberBook - 1).getQuantity();
+            int oldCount = books.get(numberBook - 1).getCount();
+            int newQuantity;
+            do{
+                newQuantity = getNumber();
+                //if(newQuantity >= oldQuantity - oldCount){
+                if(newQuantity >= oldQuantity - oldCount){
+                    break;
+                }
+                System.out.println("Книг должно быть больше.");
+            }while(true);
+            int newCount = oldCount + (newQuantity - oldQuantity);
+            
+            books.get(numberBook - 1).setQuantity(newQuantity);
+            books.get(numberBook - 1).setCount(newCount);
+        }
+        System.out.println("Авторы книги: ");
+        for (int i = 0; i < books.get(numberBook - 1).getAuthors().size(); i++) {
+            System.out.printf("%d. %s %s%n"
+                    ,i+1
+                    ,books.get(numberBook - 1).getAuthors().get(i).getFirstname()
+                    ,books.get(numberBook - 1).getAuthors().get(i).getLastname()
+            );
+        }
+        System.out.println("Если нужно изменить, нажми 1, если пропустить, нажми 2");
+        change = insertNumber(changeNumbers);
+        if(1 == change){
+            books.get(numberBook - 1).getAuthors().clear();
+            Set<Integer> setNumbersAuthors = printListAuthors();
+            if(setNumbersAuthors.isEmpty()){
+                return;
+            }
+            System.out.println("Введите новый новое количество авторов: ");
+            int countAuthors = getNumber();
+            for (int i = 0; i < countAuthors; i++) {
+                System.out.println("Введите автора "+(i+1)+": ");
+                int numberAuthor = insertNumber(setNumbersAuthors);
+                books.get(numberBook - 1).getAuthors().add(authors.get(i));
+            }
+        }
+        keeping.saveBooks(books);
+    }
+    private boolean isQuit(){
+        System.out.println("Чтобы закончить задачу нажми \"q\"");
+        String q = scanner.nextLine();
+        if("q".equals(q)){
+            return true;
+        }else{
+            return false;
+        }
     }
    
 }

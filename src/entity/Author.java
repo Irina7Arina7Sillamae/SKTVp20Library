@@ -36,7 +36,7 @@ public class Author implements Serializable{
 
     @Override
     public String toString() {
-        return "Author{" + "firstname=" + firstname + ", lastname=" + lastname + '}';
+        return firstname + " " + lastname ;
     }
 
     public Long getId() {
@@ -46,6 +46,4 @@ public class Author implements Serializable{
     public void setId(Long id) {
         this.id = id;
     }
-    
-    
-}
+        }

@@ -53,13 +53,13 @@ public class Book implements Serializable{
 
     @Override
     public String toString() {
-        return "Book{" 
-                + "bookName=" + bookName 
-                + ", authors=" + Arrays.toString(authors.toArray()) 
-                + ", publishedYear=" + publishedYear 
-                + ", quantity=" + quantity 
-                + ", count=" + count 
-                + '}';
+        return "Book" 
+                + "  " + bookName 
+                + "  " + Arrays.toString(authors.toArray()) 
+                + "  " + publishedYear 
+                + "  " + quantity + "tk" 
+                + "  " + count + "tk" ;
+                
     }
 
     public int getQuantity() {
