@@ -7,7 +7,6 @@ import entity.History;
 import entity.Reader;
 import java.util.List;
 
-
 public interface Keeping {
     public void saveBooks(List<Book> books);
     public List<Book> loadBooks();
