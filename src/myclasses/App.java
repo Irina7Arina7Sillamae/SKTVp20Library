@@ -5,7 +5,10 @@ import entity.Author;
 import entity.Book;
 import entity.History;
 import entity.Reader;
-import interfaces.Keeping;
+import facade.AuthorFacade;
+import facade.BookFacade;
+import facade.HistoryFacade;
+import facade.ReaderFacade;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -23,20 +26,33 @@ import java.util.Set;
 
 public class App {
     private Scanner scanner = new Scanner(System.in);
+    
     //---------- Данные библиотеки ----------
-    private List<Book> books = new ArrayList<>();
-    private List<Reader> readers = new ArrayList<>();
-    private List<History> histories = new ArrayList<>();
-    private List<Author> authors = new ArrayList<>();
+    private ReaderFacade readerFacade;
+    private BookFacade bookFacade;
+    private HistoryFacade historyFacade;
+    private AuthorFacade authorFacade;
+    //заменили на фасады
+    //private List<Book> books = new ArrayList<>();
+    //private List<Reader> readers = new ArrayList<>();
+    //private List<History> histories = new ArrayList<>();
+    //private List<Author> authors = new ArrayList<>();
     // -------- сохранение --------
     //private Keeping keeping = new KeeperToFile();
-    private Keeping keeping = new KeeperToBase();
+    //private Keeping keeping = new KeeperToBase();
     
     public App(){
-        books = keeping.loadBooks();
-        authors = keeping.loadAuthors();
-        readers = keeping.loadReaders();
-        histories = keeping.loadHistories();
+        init();
+        //books = keeping.loadBooks();
+        //authors = keeping.loadAuthors();
+        //readers = keeping.loadReaders();
+        //histories = keeping.loadHistories();
+    }
+    private void init(){
+        readerFacade = new ReaderFacade(Reader.class);
+        bookFacade = new BookFacade(Book.class);
+        historyFacade = new HistoryFacade(History.class);
+        authorFacade = new AuthorFacade(Author.class);
     }
     
     public void run(){
@@ -121,7 +137,7 @@ public class App {
         for (int i = 0; i < countAuthors; i++) {
             System.out.println("*** Введите номер автора   "+(i+1));
             int numberAuthor = insertNumber(setNumbersAuthors);
-            authorsBook.add(authors.get(numberAuthor - 1));
+            authorsBook.add(authorFacade.find((long)numberAuthor));
         }
         book.setAuthors(authorsBook);
         System.out.print("*** Введите название книги:   ");
@@ -131,8 +147,10 @@ public class App {
         System.out.print("*** Введите количество экземпляров книги:   ");
         book.setQuantity(getNumber());
         book.setCount(book.getQuantity());
-        books.add(book);
-        keeping.saveBooks(books);
+        
+        //books.add(book);
+        //keeping.saveBooks(books);
+        bookFacade.create(book);
     }
     private void addReader(){
         if(isQuit()){
@@ -147,8 +165,11 @@ public class App {
         reader.setLastname(scanner.nextLine());
         System.out.println("*** Телефон читателя:   ");
         reader.setPhone(scanner.nextLine());
-        readers.add(reader);
-        keeping.saveReaders(readers);
+        
+        readerFacade.create(reader);
+        //readers.add(reader);
+        //keeping.saveReaders(readers);
+        
     }
 
     private void addHistory() {
@@ -171,15 +192,27 @@ public class App {
             return;
         }
         System.out.println("*** Выберите номер читателя:   ");
-        int numberReader = insertNumber(setNumbersReaders);        
-        history.setBook(books.get(numberBook-1));
-        history.setReader(readers.get(numberReader-1));
+        //защита от неправильного ввода
+        int numberReader = insertNumber(setNumbersReaders);  
+        
+        Book book = bookFacade.find((long)numberBook);
+        history.setBook(book);
+        //history.setBook(books.get(numberBook-1));
+        
+        history.setReader(readerFacade.find((long)numberReader));
+        //history.setReader(readers.get(numberReader-1));
+        
         Calendar c = new GregorianCalendar();
         history.setGivenDate(c.getTime());
-        history.getBook().setCount(history.getBook().getCount() - 1);
-        keeping.saveBooks(books);
-        histories.add(history);
-        keeping.saveHistories(histories);
+        
+        book.setCount(book.getCount() - 1);
+        
+        bookFacade.edit(book);
+        historyFacade.create(history);
+        //keeping.saveBooks(books);
+        //histories.add(history);
+        //keeping.saveHistories(histories);
+        
         System.out.println("--------------------");
         System.out.println("*** Книга "+history.getBook().getBookName()
                             +" выдана читателю "+history.getReader().getFirstname()
@@ -192,19 +225,24 @@ public class App {
         System.out.println("--------------------");
         System.out.println("*** Список книг ***");
         Set<Integer> setNumbersBooks = new HashSet<>();
+        List<Book> books = bookFacade.findAll();
+        if(books.isEmpty()){
+            System.out.println("*** Список книг пуст, добавьте книги.");
+            return new HashSet<>();
+        }
         for (int i = 0; i < books.size(); i++) {
             if(books.get(i) != null && books.get(i).getCount() > 0){
                 System.out.printf("%1d. %-20s %20s   %-7d В наличии екземпляров:%3dtk%n"
-                        ,i+1
+                        ,books.get(i).getId()
                         ,books.get(i).getBookName()
                         ,Arrays.toString(books.get(i).getAuthors().toArray())
                         ,books.get(i).getPublishedYear()
                         ,books.get(i).getCount()
                 );
-                setNumbersBooks.add(i+1);
+                setNumbersBooks.add(books.get(i).getId().intValue());
              }else if(books.get(i) != null && books.get(i).getQuantity()>0){
                 System.out.printf("%1$d. (Книга читается до: %5$s) %2$s. %4$d. %3$s%n"
-                        ,i+1
+                        ,books.get(i).getId()
                         ,books.get(i).getBookName()
                         ,Arrays.toString(books.get(i).getAuthors().toArray())
                         ,books.get(i).getPublishedYear()
@@ -218,11 +256,16 @@ public class App {
     private Set<Integer> printListAllBooks() {
         System.out.println("--- Список книг ---");
         Set<Integer> setNumbersBooks = new HashSet<>();
+        List<Book> books = bookFacade.findAll();
+        if(books.isEmpty()){
+            System.out.println("*** Список книг пуст, добавьте книги.");
+            return new HashSet<>();
+        }
         for (int i = 0; i < books.size(); i++) {
             if(books.get(i) != null && books.get(i).getCount() >= 0
                     ){
                 System.out.printf("%4d. %11s %11s %d. В наличии екземпляров: %4d%n"
-                        ,i+1
+                        ,books.get(i).getId()
                         ,books.get(i).getBookName()
                         ,Arrays.toString(books.get(i).getAuthors().toArray())
                         ,books.get(i).getPublishedYear()
@@ -231,7 +274,7 @@ public class App {
                 setNumbersBooks.add(i+1);
             }else if(books.get(i) != null){
                 System.out.printf("%4$d. (Книга читается до: %10$s) %10$s. %7$d. %$s%n"
-                        ,i+1
+                        ,books.get(i).getId()
                         ,books.get(i).getBookName()
                         ,Arrays.toString(books.get(i).getAuthors().toArray())
                         ,books.get(i).getPublishedYear()
@@ -243,31 +286,36 @@ public class App {
         return setNumbersBooks;
     }
     private String getReturnDate(Book book){
-        for (int i = 0; i < histories.size(); i++) {
-            if(book.getBookName().equals(histories.get(i).getBook().getBookName())
-                    && histories.get(i).getReturnedDate() == null){
-                Date givenDate = histories.get(i).getGivenDate();
+        History history = historyFacade.find(book);
+        if (history == null) return "";
+        //for (int i = 0; i < histories.size(); i++) {
+            //if(book.getBookName().equals(histories.get(i).getBook().getBookName())
+                    //&& histories.get(i).getReturnedDate() == null){
+                Date givenDate = history.getGivenDate();
                 LocalDate localGivenDate = givenDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 localGivenDate = localGivenDate.plusDays(14);
                 return localGivenDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-            }
-        }
-        return "";
     }
      
     private Set<Integer> printListReaders() {
         System.out.println("--------------------");
         System.out.println("*** Список читателей ***");
         Set<Integer> setNumbersReaders = new HashSet<>();
+        
+        List<Reader> readers =readerFacade.findAll();
+        if(readers.isEmpty()){
+            System.out.println("*** Список читателей пуст.");
+            return new HashSet<>();
+        }
         for (int i = 0; i < readers.size(); i++) {
             if(readers.get(i) != null){
                 System.out.printf("%1d. %11s %-11s Телефон: %10s%n"
-                        ,i+1
+                        ,readers.get(i).getId()
                         ,readers.get(i).getFirstname()
                         ,readers.get(i).getLastname()
                         ,readers.get(i).getPhone()
                 );
-               setNumbersReaders.add(i+1);
+               setNumbersReaders.add(readers.get(i).getId().intValue());
             }
         }
         return setNumbersReaders;
@@ -287,26 +335,26 @@ public class App {
         System.out.print("*** Выберите номер возврщаемой книги:   ");
         int numberHistory = insertNumber(setNumbersGivenBooks);
         Calendar c = new GregorianCalendar();
-        histories.get(numberHistory - 1).setReturnedDate(c.getTime());
-//         Здесь объясняется что значит передача по ссылке в Java
-//         https://coderoad.ru/40480/%D0%AD%D1%82%D0%BE-Java-pass-by-reference-%D0%B8%D0%BB%D0%B8-pass-by-value
-//         Постарайтесь понять, почему код ниже не изменит count в book, которая находится в books.
-//         histories.get(numberHistory - 1).getBook().setCount(
-//                histories.get(numberHistory - 1).getBook().getCount()+1
-//         );
+        History history = historyFacade.find((long)numberHistory);
+        history.setReturnedDate(c.getTime());
+        //histories.get(numberHistory - 1).setReturnedDate(c.getTime());
+        
+        Book book = bookFacade.find(history.getBook().getId());
+        book.setCount(book.getCount()+ 1);
+        bookFacade.edit(book);
+        historyFacade.edit(history);
 
-//        А этот код будет делать что надо.
-        for (int i = 0; i < books.size(); i++) {
-            if(histories.get(numberHistory - 1).getBook().getBookName().equals(books.get(i).getBookName())){
-                books.get(i).setCount(books.get(i).getCount()+1);
-                break;
-            }
-        }
-        keeping.saveBooks(books);
-        keeping.saveHistories(histories);
+        //for (int i = 0; i < books.size(); i++) {
+        //    if(histories.get(numberHistory - 1).getBook().getBookName().equals(books.get(i).getBookName())){
+        //        books.get(i).setCount(books.get(i).getCount()+1);
+        //        break;
+        //    }
+        //}
+        //keeping.saveBooks(books);
+        //keeping.saveHistories(histories);
         System.out.println("--------------------");
         System.out.println("*** Книга "
-                +histories.get(numberHistory - 1).getBook().getBookName()
+                +history.getBook().getBookName()
                 +" возвращена в библиотеку"
         );
     }
@@ -315,17 +363,17 @@ public class App {
         System.out.println("--------------------");
         System.out.println("*** Список читаемых книг: ***");
         Set<Integer> setNumbersBook = new HashSet<>();
-        for (int i = 0; i < histories.size(); i++) {
-            if(histories.get(i) != null && histories.get(i).getReturnedDate() == null){
+        List<History> historiesGivenBooks = historyFacade.findGivenBooks();
+        for (int i = 0; i < historiesGivenBooks.size(); i++) {
                 System.out.printf("%1d. Книгу:  %-20s  читает:  %-4s  %-11s%n"    
-                        ,i+1
-                        ,histories.get(i).getBook().getBookName()
-                        ,histories.get(i).getReader().getFirstname()
-                        ,histories.get(i).getReader().getLastname()
+                        ,historiesGivenBooks.get(i).getId()
+                        ,historiesGivenBooks.get(i).getBook().getBookName()
+                        ,historiesGivenBooks.get(i).getReader().getFirstname()
+                        ,historiesGivenBooks.get(i).getReader().getLastname()
                 );
-                setNumbersBook.add(i+1);
+                setNumbersBook.add(historiesGivenBooks.get(i).getId().intValue());
             }
-        }
+        
         if(setNumbersBook.isEmpty()){
             System.out.println("*** Нет читаемых книг!");
             System.out.println("--------------------");
@@ -334,7 +382,7 @@ public class App {
     }
 
     private int getNumber() {//проверка на ввод числа
-        int number = 0;
+        int number;
         do{
             String strNumber = scanner.nextLine();
             try {
@@ -359,6 +407,7 @@ public class App {
 
     private Set<Integer> printListAuthors() {
         Set<Integer> numbersAuthors = new HashSet<>();
+        List<Author> authors = authorFacade.findAll();
         if(authors.isEmpty()){
             System.out.println("*** Список авторов пуст, добавьте авторов книги.");
             return new HashSet<>();
@@ -367,11 +416,11 @@ public class App {
         }
         for (int i = 0; i < authors.size(); i++) {
             System.out.printf("%d. %s %s%n"
-                    ,i+1
+                    ,authors.get(i).getId()
                     ,authors.get(i).getFirstname()
                     ,authors.get(i).getLastname()
             ); 
-            numbersAuthors.add(i+1);
+            numbersAuthors.add(authors.get(i).getId().intValue());
         }
         return numbersAuthors;
     }
@@ -387,11 +436,13 @@ public class App {
         author.setFirstname(scanner.nextLine());
         System.out.println("*** Фамилия автора:   ");
         author.setLastname(scanner.nextLine());
-        authors.add(author);
-        keeping.saveAuthors(authors);
+        
+        authorFacade.create(author);
+        //authors.add(author);
+        //keeping.saveAuthors(authors);
     }
 
-    private void changeBook() {
+     private void changeBook() {
         System.out.println("----- Изменение данных книги ------");
         if(isQuit()){
             return;
@@ -405,37 +456,37 @@ public class App {
          * ----- повторить  3-5 для других полей книги
          * сохранить список существующих книг 
          */
-        Set<Integer> changeNumbers = new HashSet<>();
+         Set<Integer> changeNumbers = new HashSet<>();
         changeNumbers.add(1);
         changeNumbers.add(2);
         Set<Integer> setNumbersBooks = printListAllBooks();
         if(setNumbersBooks.isEmpty()){
             return;
         }
-        
         System.out.println("Введите номер книги: ");
         int numberBook = insertNumber(setNumbersBooks);
-        System.out.println("Название книги: " + books.get(numberBook - 1).getBookName());
+        Book book = bookFacade.find((long)numberBook);
+        System.out.println("Название книги: " + book.getBookName());
         System.out.println("Если нужно изменить, нажми 1, если пропустить, нажми 2");
         int change = insertNumber(changeNumbers);
         if(1 == change){
             System.out.println("Введите новое название книги: ");
-            books.get(numberBook - 1).setBookName(scanner.nextLine());
+            book.setBookName(scanner.nextLine());
         }
-        System.out.println("Год издания книги: " + books.get(numberBook - 1).getPublishedYear());
+        System.out.println("Год издания книги: " + book.getPublishedYear());
         System.out.println("Если нужно изменить, нажми 1, если пропустить, нажми 2");
         change = insertNumber(changeNumbers);
         if(1 == change){
             System.out.println("Введите новый год издания книги: ");
-            books.get(numberBook - 1).setPublishedYear(getNumber());
+            book.setPublishedYear(getNumber());
         }
-        System.out.println("Количество экземпляров книги: " + books.get(numberBook - 1).getQuantity());
+        System.out.println("Количество экземпляров книги: " + book.getQuantity());
         System.out.println("Если нужно изменить, нажми 1, если пропустить, нажми 2");
         change = insertNumber(changeNumbers);
         if(1 == change){
             System.out.println("Введите новое количество экземпляров книги: ");
-            int oldQuantity = books.get(numberBook - 1).getQuantity();
-            int oldCount = books.get(numberBook - 1).getCount();
+            int oldQuantity = book.getQuantity();
+            int oldCount = book.getCount();
             int newQuantity;
             do{
                 newQuantity = getNumber();
@@ -447,21 +498,21 @@ public class App {
             }while(true);
             int newCount = oldCount + (newQuantity - oldQuantity);
             
-            books.get(numberBook - 1).setQuantity(newQuantity);
-            books.get(numberBook - 1).setCount(newCount);
+            book.setQuantity(newQuantity);
+            book.setCount(newCount);
         }
         System.out.println("Авторы книги: ");
-        for (int i = 0; i < books.get(numberBook - 1).getAuthors().size(); i++) {
+        for (int i = 0; i < book.getAuthors().size(); i++) {
             System.out.printf("%d. %s %s%n"
                     ,i+1
-                    ,books.get(numberBook - 1).getAuthors().get(i).getFirstname()
-                    ,books.get(numberBook - 1).getAuthors().get(i).getLastname()
+                    ,book.getAuthors().get(i).getFirstname()
+                    ,book.getAuthors().get(i).getLastname()
             );
         }
         System.out.println("Если нужно изменить, нажми 1, если пропустить, нажми 2");
         change = insertNumber(changeNumbers);
         if(1 == change){
-            books.get(numberBook - 1).getAuthors().clear();
+            book.getAuthors().clear();
             Set<Integer> setNumbersAuthors = printListAuthors();
             if(setNumbersAuthors.isEmpty()){
                 return;
@@ -471,10 +522,10 @@ public class App {
             for (int i = 0; i < countAuthors; i++) {
                 System.out.println("Введите автора "+(i+1)+": ");
                 int numberAuthor = insertNumber(setNumbersAuthors);
-                books.get(numberBook - 1).getAuthors().add(authors.get(i));
+                book.getAuthors().add(authorFacade.find((long)numberAuthor));
             }
         }
-        keeping.saveBooks(books);
+        bookFacade.edit(book);
     }
     private boolean isQuit(){
         System.out.println("Чтобы закончить задачу нажми \"q\"");
